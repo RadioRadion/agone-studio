@@ -12,7 +12,7 @@ body {
 .cursor {
     width: 20px;
     height: 20px;
-    border: 1px solid #f9c922;
+    border: 1px solid #fffb06;
     border-radius: 50%;
     position: absolute;
     transition-duration: 200ms;
@@ -68,7 +68,7 @@ body {
 
 .expand {
     animation: cursorAnim3 .5s forwards;
-    border: 1px solid #f9c922;
+    border: 1px solid #fffb06;
 }
 
 /* Loader styles */
@@ -117,7 +117,7 @@ body {
     bottom: 15px;
     border-radius: 50%;
     border: 3px solid transparent;
-    border-top-color: #f9c922;
+    border-top-color: #fffb06;
     animation: spin 1.5s linear infinite;
 }
 
@@ -242,8 +242,8 @@ body {
 }
 
 .bigger {
-    font-size: 24px;
-    color: #f9c922;
+    font-size: 45px;
+    color: #fffb06;
 }
 
 /* Gallery grid */
@@ -286,7 +286,7 @@ body {
 
 /* Utility classes */
 .rallonge {
-    height: 50px;
+    height: 1000px;
 }
 
 .horizontal {
@@ -347,7 +347,7 @@ body {
     width: 12px;
     margin: -6px 0 0 -6px;
     border-radius: 100%;
-    background: #f9c922;
+    background: #fffb06;
 }
 
 .fp-prev, .fp-next {
@@ -364,7 +364,7 @@ body {
 }
 
 .fp-prev:hover, .fp-next:hover {
-    border-color: #f9c922 !important;
+    border-color: #fffb06 !important;
 }
 
 .fp-tooltip {

@@ -32,21 +32,15 @@ window.addEventListener('load', function() {
     let tooltip = document.querySelector('.fp-tooltip');
     if (tooltip) tooltip.style.opacity = 0;
 
-    // GSAP Animations
-    gsap.fromTo("#fp-nav", {x: 300, opacity: 0}, {duration: 18, x: 0, opacity: 1});
-    gsap.from(".fp-bottom", {duration: 18, y: 300, opacity: 0});
-
     setTimeout(function() {
         if (tooltip) tooltip.style.opacity = 1;
         
-        // Move to middle silently
-        if (typeof fullpage_api !== 'undefined') {
-            fullpage_api.silentMoveTo(2,1);
+        // Start at home section
+        if (typeof $.fn.fullpage !== 'undefined') {
+            $.fn.fullpage.silentMoveTo(1,1);
         }
 
-        // More GSAP animations
-        gsap.from(".fp-prev", {duration: 7, x: -100, opacity: 0, scale: 0.1});
-        gsap.from(".fp-next", {duration: 7, x: 100, opacity: 0, scale: 0.1});
+        // Fade out background
         gsap.to("#background", {duration: 6, delay: 1, opacity: 0});
 
         // Add loaded class
@@ -79,17 +73,6 @@ function initializeAudio() {
     }
 }
 
-// Carousel Control
-function galleryspin(direction) {
-    const spinner = document.querySelector("#spinner");
-    if (spinner) {
-        let angle = parseInt(spinner.getAttribute('data-angle') || '0');
-        angle += direction !== '-' ? 45 : -45;
-        spinner.setAttribute('data-angle', angle);
-        spinner.style.transform = `rotateY(${angle}deg)`;
-    }
-}
-
 // Cursor functionality
 function initializeCursor() {
     const cursor = document.querySelector('.cursor');
@@ -106,77 +89,18 @@ function initializeCursor() {
 
 // Initialize FullPage.js
 function initializeFullPage() {
-    new fullpage('#fullpage', {
-        sectionsColor: ['#000000', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
-        anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', 'lastPage'],
+    $('#fullpage').fullpage({
+        sectionsColor: ['#000000', '#000000'],
+        anchors: ['home', 'design'],
         navigation: true,
         slidesNavigation: true,
-        navigationTooltips: ['f l a s h', '', 't v'],
+        navigationTooltips: ['home', 'design'],
         showActiveTooltip: true,
         scrollOverflow: true,
         scrollingSpeed: 1700,
-        menu: '#menu',
-        licenseKey: '7D72BD02-D9324668-A20A7371-BA347154',
-        afterResponsive: function(isResponsive){},
-        onLeave: function(origin, destination, direction){
-            var params = {
-                origin: origin,
-                destination:destination,
-                direction: direction
-            };
-
-            if (params.destination.anchor === "secondPage") {
-              if (params.origin.anchor === "firstPage") {
-                fullpage_api.moveSlideRight();
-              }
-              if (params.origin.anchor === "3rdPage") {
-                fullpage_api.moveSlideRight();
-              }
-            }
-        },
-        onSlideLeave: function(section, origin, destination, direction){
-            var params = {
-                section: section,
-                origin: origin,
-                destination: destination,
-                direction: direction
-            };
-            if (params.section.anchor === "secondPage" && params.destination.isFirst === true) {
-              gsap.to(".ClassCSS", {
-                duration: 1,
-                x: 0,
-                opacity: 1,
-                delay: 0.8,
-                stagger: 0.2,
-                ease: "expo",
-                force3D: true
-              });
-            } else {
-              setTimeout(function() {
-                gsap.to(".ClassCSS", {duration: 0.2, x: 400, opacity: 0});
-              }, 1500);
-            }
-        },
-        afterLoad: function(origin, destination, direction){
-            var params = {
-                origin: origin,
-                destination: destination,
-                direction: direction
-            };
-            if (params.destination.anchor === "secondPage" && params.destination.index === 1) {
-              gsap.to(".ClassCSS", {
-                duration: 1,
-                x: 0,
-                opacity: 1,
-                delay: 0.8,
-                stagger: 0.2,
-                ease: "expo",
-                force3D: true
-              });
-            } else {
-              setTimeout(function() {
-                gsap.to(".ClassCSS", {duration: 0.2, x: 400, opacity: 0});
-              }, 1500);
+        onLeave: function(index, nextIndex, direction){
+            if(nextIndex === 2 && index === 1) { // If going from home to design
+                $.fn.fullpage.moveSlideRight();
             }
         }
     });
