@@ -90,19 +90,94 @@ function galleryspin(direction) {
     }
 }
 
+// Cursor functionality
+function initializeCursor() {
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', e => {
+        cursor.setAttribute("style", "top: "+(e.pageY - 10)+"px; left: "+(e.pageX - 10)+"px;");
+    });
+    document.addEventListener('click', () => {
+        cursor.classList.add("expand");
+        setTimeout(() => {
+            cursor.classList.remove("expand");
+        }, 500);
+    });
+}
+
 // Initialize FullPage.js
 function initializeFullPage() {
     new fullpage('#fullpage', {
-        autoScrolling: true,
-        scrollHorizontally: true,
+        sectionsColor: ['#000000', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
+        anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', 'lastPage'],
         navigation: true,
-        navigationPosition: 'right',
         slidesNavigation: true,
-        controlArrows: true,
-        anchors: ['design', 'home'],
-        licenseKey: 'gplv3-license',
-        afterLoad: function(origin, destination, direction) {
-            // Add any specific section animations here
+        navigationTooltips: ['f l a s h', '', 't v'],
+        showActiveTooltip: true,
+        scrollOverflow: true,
+        scrollingSpeed: 1700,
+        menu: '#menu',
+        licenseKey: '7D72BD02-D9324668-A20A7371-BA347154',
+        afterResponsive: function(isResponsive){},
+        onLeave: function(origin, destination, direction){
+            var params = {
+                origin: origin,
+                destination:destination,
+                direction: direction
+            };
+
+            if (params.destination.anchor === "secondPage") {
+              if (params.origin.anchor === "firstPage") {
+                fullpage_api.moveSlideRight();
+              }
+              if (params.origin.anchor === "3rdPage") {
+                fullpage_api.moveSlideRight();
+              }
+            }
+        },
+        onSlideLeave: function(section, origin, destination, direction){
+            var params = {
+                section: section,
+                origin: origin,
+                destination: destination,
+                direction: direction
+            };
+            if (params.section.anchor === "secondPage" && params.destination.isFirst === true) {
+              gsap.to(".ClassCSS", {
+                duration: 1,
+                x: 0,
+                opacity: 1,
+                delay: 0.8,
+                stagger: 0.2,
+                ease: "expo",
+                force3D: true
+              });
+            } else {
+              setTimeout(function() {
+                gsap.to(".ClassCSS", {duration: 0.2, x: 400, opacity: 0});
+              }, 1500);
+            }
+        },
+        afterLoad: function(origin, destination, direction){
+            var params = {
+                origin: origin,
+                destination: destination,
+                direction: direction
+            };
+            if (params.destination.anchor === "secondPage" && params.destination.index === 1) {
+              gsap.to(".ClassCSS", {
+                duration: 1,
+                x: 0,
+                opacity: 1,
+                delay: 0.8,
+                stagger: 0.2,
+                ease: "expo",
+                force3D: true
+              });
+            } else {
+              setTimeout(function() {
+                gsap.to(".ClassCSS", {duration: 0.2, x: 400, opacity: 0});
+              }, 1500);
+            }
         }
     });
 }
@@ -114,5 +189,25 @@ window.initialLoadTime = new Date().getTime();
 document.addEventListener('DOMContentLoaded', function() {
     initializeGallery();
     initializeAudio();
+    initializeCursor();
     initializeFullPage();
 });
+
+// Terminal typing effect
+function typeWriter(text, i, fnCallback) {
+    if (i < text.length) {
+        document.getElementById("AboutDevTypeText").innerHTML = text.substring(0, i+1);
+        setTimeout(function() {
+            typeWriter(text, i + 1, fnCallback)
+        }, 100);
+    } else if (typeof fnCallback == 'function') {
+        setTimeout(fnCallback, 700);
+    }
+}
+
+// Start the typing animation
+setTimeout(function() {
+    typeWriter("Agone Studio", 0, function() {
+        // Callback after typing completes
+    });
+}, 2000);
