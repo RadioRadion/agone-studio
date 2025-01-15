@@ -23,12 +23,41 @@ function initializeGallery() {
     }
 }
 
-// Page Loading Animation
+// Page Loading and Animations
 window.addEventListener('load', function() {
-    const body = document.body;
-    setTimeout(() => {
-        body.classList.add('loaded');
-    }, 2000);
+    const date2 = new Date().getTime();
+    const loading = 10000 - (date2 - window.initialLoadTime);
+    
+    // Hide sneaky menu
+    let tooltip = document.querySelector('.fp-tooltip');
+    if (tooltip) tooltip.style.opacity = 0;
+
+    // GSAP Animations
+    gsap.fromTo("#fp-nav", {x: 300, opacity: 0}, {duration: 18, x: 0, opacity: 1});
+    gsap.from(".fp-bottom", {duration: 18, y: 300, opacity: 0});
+
+    setTimeout(function() {
+        if (tooltip) tooltip.style.opacity = 1;
+        
+        // Move to middle silently
+        if (typeof fullpage_api !== 'undefined') {
+            fullpage_api.silentMoveTo(2,1);
+        }
+
+        // More GSAP animations
+        gsap.from(".fp-prev", {duration: 7, x: -100, opacity: 0, scale: 0.1});
+        gsap.from(".fp-next", {duration: 7, x: 100, opacity: 0, scale: 0.1});
+        gsap.to("#background", {duration: 6, delay: 1, opacity: 0});
+
+        // Add loaded class
+        document.body.classList.add("loaded");
+
+        // Remove background after animation
+        setTimeout(function() {
+            const bg = document.querySelector('#background');
+            if (bg) bg.remove();
+        }, 8000);
+    }, loading);
 });
 
 // Audio Control
@@ -61,8 +90,29 @@ function galleryspin(direction) {
     }
 }
 
+// Initialize FullPage.js
+function initializeFullPage() {
+    new fullpage('#fullpage', {
+        autoScrolling: true,
+        scrollHorizontally: true,
+        navigation: true,
+        navigationPosition: 'right',
+        slidesNavigation: true,
+        controlArrows: true,
+        anchors: ['design', 'home'],
+        licenseKey: 'gplv3-license',
+        afterLoad: function(origin, destination, direction) {
+            // Add any specific section animations here
+        }
+    });
+}
+
+// Store initial load time
+window.initialLoadTime = new Date().getTime();
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeGallery();
     initializeAudio();
+    initializeFullPage();
 });
